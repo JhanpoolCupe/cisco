@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Cargar el navbar
     fetch('./components/navbar.html')
         .then(response => response.text())
@@ -12,12 +12,36 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => console.error('Error loading navbar:', error));
 });
 
+
+// ==== CAMBIO DE IMAGEN PRINCIPAL (para sección de miniaturas) ====
+
+// Espera a que el DOM esté listo
+document.addEventListener("DOMContentLoaded", () => {
+    const mainImage = document.querySelector(
+        ".max-h-full.max-w-full.object-contain.cursor-pointer"
+    );
+
+    // Función para intercambiar imagen principal
+    window.toExchangeImage = function (imgElement) {
+        if (mainImage) {
+            mainImage.src = imgElement.src;
+        }
+    };
+
+    // Restablecer la primera miniatura como imagen inicial al recargar
+    const firstThumbnail = document.querySelector(".flex.gap-3.mt-4 img");
+    if (mainImage && firstThumbnail) {
+        mainImage.src = firstThumbnail.src;
+    }
+});
+
+
 function initializeNavbar() {
     // Menú hamburguesa (versión simplificada que será reemplazada por initializeMobileMenu)
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     if (mobileMenuButton) {
         const icon = mobileMenuButton.querySelector('i');
-        mobileMenuButton.addEventListener('click', function() {
+        mobileMenuButton.addEventListener('click', function () {
             if (icon) {
                 icon.classList.toggle('fa-bars');
                 icon.classList.toggle('fa-times');
@@ -39,7 +63,7 @@ function initializeMobileMenu() {
         mobileMenu.classList.remove('hidden');
         if (menuOverlay) menuOverlay.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
-        
+
         // Cambiar ícono
         const icon = mobileMenuButton.querySelector('i');
         if (icon) {
@@ -60,7 +84,7 @@ function initializeMobileMenu() {
         mobileMenu.classList.add('-translate-x-full');
         if (menuOverlay) menuOverlay.classList.add('hidden');
         document.body.style.overflow = '';
-        
+
         // Cambiar ícono
         const icon = mobileMenuButton.querySelector('i');
         if (icon) {
@@ -96,14 +120,14 @@ function initializeSearchModal() {
     if (closeSearch) closeSearch.addEventListener('click', closeSearchModal);
 
     if (searchModal) {
-        searchModal.addEventListener('click', function(e) {
+        searchModal.addEventListener('click', function (e) {
             if (e.target === searchModal) {
                 closeSearchModal();
             }
         });
     }
 
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && searchModal && !searchModal.classList.contains('none')) {
             closeSearchModal();
         }
@@ -143,3 +167,21 @@ function addDynamicStyles() {
     `;
     document.head.appendChild(style);
 }
+
+// Almacena la referencia de la imagen principal
+const mainImage = document.querySelector('.max-h-full.max-w-full.object-contain.cursor-pointer');
+
+// Función para cambiar la imagen principal al hacer clic en miniatura
+function toExchangeImage(imgElement) {
+    if (mainImage) {
+        mainImage.src = imgElement.src;
+    }
+}
+
+// Asegura que al recargar la página siempre se muestre la primera imagen
+window.addEventListener("load", () => {
+    const firstThumbnail = document.querySelector('.flex.gap-3.mt-4 img');
+    if (mainImage && firstThumbnail) {
+        mainImage.src = firstThumbnail.src;
+    }
+});
